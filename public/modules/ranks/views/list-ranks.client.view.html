@@ -1,0 +1,21 @@
+<section data-ng-controller="RanksController" data-ng-init="find()">
+    <div class="page-header">
+        <h1>Rank</h1>
+    </div>
+    <table class="table table-striped">
+        <tr>
+            <th>Rank</th>
+            <th>Player</th>
+            <th>Wins</th>
+            <th>Loses</th>
+            <th>Change</th>
+        </tr>
+        <tr ng-repeat="rank in ranks">
+            <td>{{ rank.rank }}</td>
+            <td>{{ rank.player }}</td>
+            <td>{{ rank.wins }}</td>
+            <td>{{ rank.loses }}</td>
+            <td>{{ rank.change }}</td>
+        </tr>
+    </table>
+</section>
