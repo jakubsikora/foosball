@@ -10,7 +10,7 @@
             <th>Loses</th>
             <th>Change</th>
         </tr>
-        <tr ng-repeat="rank in ranks">
+        <tr ng-repeat="rank in ranks | orderObjectBy:'rank':true">
             <td>{{ rank.rank }}</td>
             <td>{{ rank.player }}</td>
             <td>{{ rank.wins }}</td>

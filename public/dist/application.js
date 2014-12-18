@@ -358,12 +358,26 @@ angular.module('ranks').controller('RanksController', ['$scope', '$stateParams',
 
 		// Find existing Rank
 		$scope.findOne = function() {
-			$scope.rank = Ranks.get({ 
+			$scope.rank = Ranks.get({
 				rankId: $stateParams.rankId
 			});
 		};
 	}
 ]);
+
+angular.module('ranks').filter('orderObjectBy', function() {
+  return function(items, field, reverse) {
+    var filtered = [];
+    angular.forEach(items, function(item) {
+      filtered.push(item);
+    });
+    filtered.sort(function (a, b) {
+      return (a[field] > b[field] ? 1 : -1);
+    });
+    if(reverse) filtered.reverse();
+    return filtered;
+  };
+});
 'use strict';
 
 //Ranks service used to communicate Ranks REST endpoints
