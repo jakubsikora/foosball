@@ -47,8 +47,12 @@ angular.element(document).ready(function() {
 ApplicationConfiguration.registerModule('core');
 'use strict';
 
-// Use applicaion configuration module to register a new module
+// Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('ranks');
+'use strict';
+
+// Use applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('scores');
 'use strict';
 
 // Use Applicaion configuration module to register a new module
@@ -60,7 +64,7 @@ ApplicationConfiguration.registerModule('users');
 angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 	function($stateProvider, $urlRouterProvider) {
 		// Redirect to home view when route not found
-		$urlRouterProvider.otherwise('/ranks');
+		$urlRouterProvider.otherwise('/');
 
 		// Home state routing
 		$stateProvider.
@@ -91,10 +95,13 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
 'use strict';
 
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication',
-	function($scope, Authentication) {
-		// This provides Authentication context.
+angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentication', 'Ranks',
+	function($scope, $q, Authentication, Ranks) {
+    // This provides Authentication context.
 		$scope.authentication = Authentication;
+
+    $scope.data = {};
+    $scope.data.ranks = Ranks.query();
 	}
 ]);
 'use strict';
@@ -265,125 +272,70 @@ angular.module('core').service('Menus', [
 ]);
 'use strict';
 
+//Ranks service used to communicate Ranks REST endpoints
+angular.module('ranks').factory('Ranks', ['$resource',
+  function($resource) {
+    return $resource('ranks/:rankId', { rankId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+'use strict';
+
 // Configuring the Articles module
-angular.module('ranks').run(['Menus',
+angular.module('scores').run(['Menus',
 	function(Menus) {
 		// Set top bar menu items
-		Menus.addMenuItem('topbar', 'Ranks', 'ranks', 'dropdown', '/ranks(/create)?');
-		Menus.addSubMenuItem('topbar', 'ranks', 'List Ranks', 'ranks');
-		Menus.addSubMenuItem('topbar', 'ranks', 'New Rank', 'ranks/create');
+		Menus.addMenuItem('topbar', 'Scores', 'scores', 'dropdown', '/scores(/create)?');
+		Menus.addSubMenuItem('topbar', 'scores', 'List Scores', 'scores');
+		Menus.addSubMenuItem('topbar', 'scores', 'New Score', 'scores/create');
 	}
 ]);
 'use strict';
 
 //Setting up route
-angular.module('ranks').config(['$stateProvider',
+angular.module('scores').config(['$stateProvider',
 	function($stateProvider) {
-		// Ranks state routing
+		// Scores state routing
 		$stateProvider.
-		state('listRanks', {
-			url: '/ranks',
-			templateUrl: 'modules/ranks/views/list-ranks.client.view.html'
+		state('listScores', {
+			url: '/scores',
+			templateUrl: 'modules/scores/views/list-scores.client.view.html'
 		}).
-		state('createRank', {
-			url: '/ranks/create',
-			templateUrl: 'modules/ranks/views/create-rank.client.view.html'
+		state('createScore', {
+			url: '/scores/create',
+			templateUrl: 'modules/scores/views/create-score.client.view.html'
 		}).
-		state('viewRank', {
-			url: '/ranks/:rankId',
-			templateUrl: 'modules/ranks/views/view-rank.client.view.html'
+		state('viewScore', {
+			url: '/scores/:scoreId',
+			templateUrl: 'modules/scores/views/view-score.client.view.html'
 		}).
-		state('editRank', {
-			url: '/ranks/:rankId/edit',
-			templateUrl: 'modules/ranks/views/edit-rank.client.view.html'
+		state('editScore', {
+			url: '/scores/:scoreId/edit',
+			templateUrl: 'modules/scores/views/edit-score.client.view.html'
 		});
 	}
 ]);
 'use strict';
 
-// Ranks controller
-angular.module('ranks').controller('RanksController', ['$scope', '$stateParams', '$location', 'Authentication', 'Ranks',
-	function($scope, $stateParams, $location, Authentication, Ranks ) {
+// Scores controller
+angular.module('scores').controller('ScoresController', ['$scope', '$stateParams', '$location', 'Authentication', 'Scores',
+	function($scope, $stateParams, $location, Authentication, Scores ) {
 		$scope.authentication = Authentication;
 
-		// Create new Rank
-		$scope.create = function() {
-			// Create new Rank object
-			var rank = new Ranks ({
-				name: this.name
-			});
-
-			// Redirect after save
-			rank.$save(function(response) {
-				$location.path('ranks/' + response._id);
-
-				// Clear form fields
-				$scope.name = '';
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-			});
-		};
-
-		// Remove existing Rank
-		$scope.remove = function( rank ) {
-			if ( rank ) { rank.$remove();
-
-				for (var i in $scope.ranks ) {
-					if ($scope.ranks [i] === rank ) {
-						$scope.ranks.splice(i, 1);
-					}
-				}
-			} else {
-				$scope.rank.$remove(function() {
-					$location.path('ranks');
-				});
-			}
-		};
-
-		// Update existing Rank
-		$scope.update = function() {
-			var rank = $scope.rank ;
-
-			rank.$update(function() {
-				$location.path('ranks/' + rank._id);
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-			});
-		};
-
-		// Find a list of Ranks
-		$scope.find = function() {
-			$scope.ranks = Ranks.query();
-		};
-
-		// Find existing Rank
-		$scope.findOne = function() {
-			$scope.rank = Ranks.get({
-				rankId: $stateParams.rankId
-			});
-		};
-	}
+    $scope.data = {};
+    $scope.data.scores = Scores.query();
+  }
 ]);
-
-angular.module('ranks').filter('orderObjectBy', function() {
-  return function(items, field, reverse) {
-    var filtered = [];
-    angular.forEach(items, function(item) {
-      filtered.push(item);
-    });
-    filtered.sort(function (a, b) {
-      return (a[field] > b[field] ? 1 : -1);
-    });
-    if(reverse) filtered.reverse();
-    return filtered;
-  };
-});
 'use strict';
 
-//Ranks service used to communicate Ranks REST endpoints
-angular.module('ranks').factory('Ranks', ['$resource',
+//Scores service used to communicate Scores REST endpoints
+angular.module('scores').factory('Scores', ['$resource',
 	function($resource) {
-		return $resource('ranks/:rankId', { rankId: '@_id'
+		return $resource('scores/:scoreId', { scoreId: '@_id'
 		}, {
 			update: {
 				method: 'PUT'
