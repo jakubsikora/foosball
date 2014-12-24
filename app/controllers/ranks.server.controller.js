@@ -15,6 +15,12 @@ exports.list = function(req, res) {
       , defaultRank = 1000
       , teamA
       , teamB
+      , teamAP1
+      , teamAP2
+      , teamBP1
+      , teamBP2
+      , teamARankAvg
+      , teamBRankAvg
       , teamAScore
       , teamBScore
       , resultRank = []
@@ -86,6 +92,120 @@ exports.list = function(req, res) {
             rank[teamA]['loses'] = rank[teamA]['loses'] + 1 || 1;
           }
         }
+              // Doubles
+      else if (score.teamA.length > 1 && score.teamB.length > 1) {
+        // Proxy
+        teamA = score.teamA;
+        teamB = score.teamB;
+        teamAP1 = teamA[0];
+        teamAP2 = teamA[1];
+        teamBP1 = teamB[0];
+        teamBP2 = teamB[1];
+        teamAScore = score.teamAScore;
+        teamBScore = score.teamBScore;
+
+        // Set initial values
+        if (!rank[teamAP1]) {
+          rank[teamAP1] = {
+            rank: defaultRank,
+            games: 0,
+            wins: 0,
+            loses: 0
+          };
+        }
+
+        if (!rank[teamAP2]) {
+          rank[teamAP2] = {
+            rank: defaultRank,
+            games: 0,
+            wins: 0,
+            loses: 0
+          };
+        }
+
+        if (!rank[teamBP1]) {
+         rank[teamBP1] = {
+            rank: defaultRank,
+            games: 0,
+            wins: 0,
+            loses: 0
+          };
+        }
+
+        if (!rank[teamBP2]) {
+         rank[teamBP2] = {
+            rank: defaultRank,
+            games: 0,
+            wins: 0,
+            loses: 0
+          };
+        }
+
+        teamARankAvg = (rank[teamAP1]['rank'] + rank[teamAP2]['rank']) / 2;
+        teamBRankAvg = (rank[teamBP1]['rank'] + rank[teamBP2]['rank']) / 2;
+
+        // Store previous rank
+        rank[teamAP1]['rank_before'] = rank[teamAP1]['rank'];
+        rank[teamAP2]['rank_before'] = rank[teamAP2]['rank'];
+        rank[teamBP1]['rank_before'] = rank[teamBP1]['rank'];
+        rank[teamBP2]['rank_before'] = rank[teamBP2]['rank'];
+
+        // Calculate ranking when teamA wins
+        if (teamAScore > teamBScore) {
+          resultRank = calculate(
+            rank[teamAP1]['rank'], teamBRankAvg, true, false);
+          rank[teamAP1]['rank'] = resultRank[0];
+
+          resultRank = calculate(
+            rank[teamAP2]['rank'], teamBRankAvg, true, false);
+          rank[teamAP2]['rank'] = resultRank[0];
+
+          resultRank = calculate(
+            rank[teamBP1]['rank'], teamARankAvg, false, true);
+          rank[teamBP1]['rank'] = resultRank[0];
+
+          resultRank = calculate(
+            rank[teamBP2]['rank'], teamARankAvg, false, true);
+          rank[teamBP2]['rank'] = resultRank[0];
+
+          rank[teamAP1]['games'] = rank[teamAP1]['games'] + 1 || 1;
+          rank[teamAP2]['games'] = rank[teamAP2]['games'] + 1 || 1;
+          rank[teamBP1]['games'] = rank[teamBP1]['games'] + 1 || 1;
+          rank[teamBP2]['games'] = rank[teamBP2]['games'] + 1 || 1;
+
+          rank[teamAP1]['wins'] = rank[teamAP1]['wins'] + 1 || 1;
+          rank[teamAP2]['wins'] = rank[teamAP2]['wins'] + 1 || 1;
+          rank[teamBP1]['loses'] = rank[teamBP1]['loses'] + 1 || 1;
+          rank[teamBP2]['loses'] = rank[teamBP2]['loses'] + 1 || 1;
+        } // Calculate ranking when teamB wins
+        else if (teamAScore < teamBScore) {
+          resultRank = calculate(
+            rank[teamAP1]['rank'], teamBRankAvg, false, true);
+          rank[teamAP1]['rank'] = resultRank[0];
+
+          resultRank = calculate(
+            rank[teamAP2]['rank'], teamBRankAvg, false, true);
+          rank[teamAP2]['rank'] = resultRank[0];
+
+          resultRank = calculate(
+            rank[teamBP1]['rank'], teamARankAvg, true, false);
+          rank[teamBP1]['rank'] = resultRank[0];
+
+          resultRank = calculate(
+            rank[teamBP2]['rank'], teamARankAvg, true, false);
+          rank[teamBP2]['rank'] = resultRank[0];
+
+          rank[teamAP1]['games'] = rank[teamAP1]['games'] + 1 || 1;
+          rank[teamAP2]['games'] = rank[teamAP2]['games'] + 1 || 1;
+          rank[teamBP1]['games'] = rank[teamBP1]['games'] + 1 || 1;
+          rank[teamBP2]['games'] = rank[teamBP2]['games'] + 1 || 1;
+
+          rank[teamAP1]['loses'] = rank[teamAP1]['loses'] + 1 || 1;
+          rank[teamAP2]['loses'] = rank[teamAP2]['loses'] + 1 || 1;
+          rank[teamBP1]['wins'] = rank[teamBP1]['wins'] + 1 || 1;
+          rank[teamBP2]['wins'] = rank[teamBP2]['wins'] + 1 || 1;
+        }
+      }
       });
 
       // Parse object into an array
