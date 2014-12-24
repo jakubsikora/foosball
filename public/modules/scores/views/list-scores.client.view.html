@@ -1,0 +1,30 @@
+<section data-ng-controller="ScoresController">
+    <div class="intro-message">
+        <h3>Foosball Scores</h3>
+            <hr class="intro-divider">
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered table-condensed">
+                <tr class="info">
+                    <th>Team A</th>
+                    <th>Team B</th>
+                    <th>Score</th>
+                    <th>Date</th>
+                </tr>
+                <tr class="active"
+                    ng-repeat="score in data.scores">
+                        <td>
+                            <span ng-repeat="team in score.teamA">{{ team }} </span>
+                        </td>
+                        <td>
+                            <span ng-repeat="team in score.teamB">{{ team }} </span>
+                        </td>
+                        <td>{{ score.teamAScore }} : {{ score.teamBScore }}</td>
+                    <td>{{ score.saved | date:'medium' }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</section>

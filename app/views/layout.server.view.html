@@ -32,6 +32,8 @@
 	<!-- Fav Icon -->
 	<link href="/modules/core/img/brand/favicon.ico" rel="shortcut icon" type="image/x-icon">
 
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
 	<!--Application CSS Files-->
 	{% for cssFile in cssFiles %}<link rel="stylesheet" href="{{cssFile}}">
 	{% endfor %}
@@ -43,12 +45,21 @@
 </head>
 
 <body class="ng-cloak">
-	<header data-ng-include="'/modules/core/views/header.client.view.html'" class="navbar navbar-fixed-top navbar-inverse"></header>
-	<section class="content">
-		<section class="container">
-			{% block content %}{% endblock %}
-		</section>
-	</section>
+	<header data-ng-include="'/modules/core/views/header.client.view.html'"></header>
+
+	<div class="intro-header">
+		<div class="container">
+    	<div class="row">
+				<div class="col-lg-12">
+					<section class="content">
+						<section class="container">
+							{% block content %}{% endblock %}
+						</section>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<!--Embedding The User Object-->
 	<script type="text/javascript">
@@ -57,7 +68,7 @@
 
 	<!--Application JavaScript Files-->
 	{% for jsFile in jsFiles %}<script type="text/javascript" src="{{jsFile}}"></script>
-	{% endfor %} 
+	{% endfor %}
 
 	{% if process.env.NODE_ENV === 'development' %}
 	<!--Livereload script rendered -->

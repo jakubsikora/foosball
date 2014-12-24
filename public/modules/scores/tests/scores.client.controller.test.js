@@ -1,10 +1,10 @@
 'use strict';
 
 (function() {
-	// Ranks Controller Spec
-	describe('Ranks Controller Tests', function() {
+	// Scores Controller Spec
+	describe('Scores Controller Tests', function() {
 		// Initialize global variables
-		var RanksController,
+		var ScoresController,
 		scope,
 		$httpBackend,
 		$stateParams,
@@ -44,69 +44,69 @@
 			$httpBackend = _$httpBackend_;
 			$location = _$location_;
 
-			// Initialize the Ranks controller.
-			RanksController = $controller('RanksController', {
+			// Initialize the Scores controller.
+			ScoresController = $controller('ScoresController', {
 				$scope: scope
 			});
 		}));
 
-		it('$scope.find() should create an array with at least one Rank object fetched from XHR', inject(function(Ranks) {
-			// Create sample Rank using the Ranks service
-			var sampleRank = new Ranks({
-				name: 'New Rank'
+		it('$scope.find() should create an array with at least one Score object fetched from XHR', inject(function(Scores) {
+			// Create sample Score using the Scores service
+			var sampleScore = new Scores({
+				name: 'New Score'
 			});
 
-			// Create a sample Ranks array that includes the new Rank
-			var sampleRanks = [sampleRank];
+			// Create a sample Scores array that includes the new Score
+			var sampleScores = [sampleScore];
 
 			// Set GET response
-			$httpBackend.expectGET('ranks').respond(sampleRanks);
+			$httpBackend.expectGET('scores').respond(sampleScores);
 
 			// Run controller functionality
 			scope.find();
 			$httpBackend.flush();
 
 			// Test scope value
-			expect(scope.ranks).toEqualData(sampleRanks);
+			expect(scope.scores).toEqualData(sampleScores);
 		}));
 
-		it('$scope.findOne() should create an array with one Rank object fetched from XHR using a rankId URL parameter', inject(function(Ranks) {
-			// Define a sample Rank object
-			var sampleRank = new Ranks({
-				name: 'New Rank'
+		it('$scope.findOne() should create an array with one Score object fetched from XHR using a scoreId URL parameter', inject(function(Scores) {
+			// Define a sample Score object
+			var sampleScore = new Scores({
+				name: 'New Score'
 			});
 
 			// Set the URL parameter
-			$stateParams.rankId = '525a8422f6d0f87f0e407a33';
+			$stateParams.scoreId = '525a8422f6d0f87f0e407a33';
 
 			// Set GET response
-			$httpBackend.expectGET(/ranks\/([0-9a-fA-F]{24})$/).respond(sampleRank);
+			$httpBackend.expectGET(/scores\/([0-9a-fA-F]{24})$/).respond(sampleScore);
 
 			// Run controller functionality
 			scope.findOne();
 			$httpBackend.flush();
 
 			// Test scope value
-			expect(scope.rank).toEqualData(sampleRank);
+			expect(scope.score).toEqualData(sampleScore);
 		}));
 
-		it('$scope.create() with valid form data should send a POST request with the form input values and then locate to new object URL', inject(function(Ranks) {
-			// Create a sample Rank object
-			var sampleRankPostData = new Ranks({
-				name: 'New Rank'
+		it('$scope.create() with valid form data should send a POST request with the form input values and then locate to new object URL', inject(function(Scores) {
+			// Create a sample Score object
+			var sampleScorePostData = new Scores({
+				name: 'New Score'
 			});
 
-			// Create a sample Rank response
-			var sampleRankResponse = new Ranks({
+			// Create a sample Score response
+			var sampleScoreResponse = new Scores({
 				_id: '525cf20451979dea2c000001',
-				name: 'New Rank'
+				name: 'New Score'
 			});
 
 			// Fixture mock form input values
-			scope.name = 'New Rank';
+			scope.name = 'New Score';
 
 			// Set POST response
-			$httpBackend.expectPOST('ranks', sampleRankPostData).respond(sampleRankResponse);
+			$httpBackend.expectPOST('scores', sampleScorePostData).respond(sampleScoreResponse);
 
 			// Run controller functionality
 			scope.create();
@@ -115,49 +115,49 @@
 			// Test form inputs are reset
 			expect(scope.name).toEqual('');
 
-			// Test URL redirection after the Rank was created
-			expect($location.path()).toBe('/ranks/' + sampleRankResponse._id);
+			// Test URL redirection after the Score was created
+			expect($location.path()).toBe('/scores/' + sampleScoreResponse._id);
 		}));
 
-		it('$scope.update() should update a valid Rank', inject(function(Ranks) {
-			// Define a sample Rank put data
-			var sampleRankPutData = new Ranks({
+		it('$scope.update() should update a valid Score', inject(function(Scores) {
+			// Define a sample Score put data
+			var sampleScorePutData = new Scores({
 				_id: '525cf20451979dea2c000001',
-				name: 'New Rank'
+				name: 'New Score'
 			});
 
-			// Mock Rank in scope
-			scope.rank = sampleRankPutData;
+			// Mock Score in scope
+			scope.score = sampleScorePutData;
 
 			// Set PUT response
-			$httpBackend.expectPUT(/ranks\/([0-9a-fA-F]{24})$/).respond();
+			$httpBackend.expectPUT(/scores\/([0-9a-fA-F]{24})$/).respond();
 
 			// Run controller functionality
 			scope.update();
 			$httpBackend.flush();
 
 			// Test URL location to new object
-			expect($location.path()).toBe('/ranks/' + sampleRankPutData._id);
+			expect($location.path()).toBe('/scores/' + sampleScorePutData._id);
 		}));
 
-		it('$scope.remove() should send a DELETE request with a valid rankId and remove the Rank from the scope', inject(function(Ranks) {
-			// Create new Rank object
-			var sampleRank = new Ranks({
+		it('$scope.remove() should send a DELETE request with a valid scoreId and remove the Score from the scope', inject(function(Scores) {
+			// Create new Score object
+			var sampleScore = new Scores({
 				_id: '525a8422f6d0f87f0e407a33'
 			});
 
-			// Create new Ranks array and include the Rank
-			scope.ranks = [sampleRank];
+			// Create new Scores array and include the Score
+			scope.scores = [sampleScore];
 
 			// Set expected DELETE response
-			$httpBackend.expectDELETE(/ranks\/([0-9a-fA-F]{24})$/).respond(204);
+			$httpBackend.expectDELETE(/scores\/([0-9a-fA-F]{24})$/).respond(204);
 
 			// Run controller functionality
-			scope.remove(sampleRank);
+			scope.remove(sampleScore);
 			$httpBackend.flush();
 
 			// Test array after successful delete
-			expect(scope.ranks.length).toBe(0);
+			expect(scope.scores.length).toBe(0);
 		}));
 	});
 }());
