@@ -27,8 +27,7 @@ var ScoreSchema = new Schema({
 		default: 0
 	},
 	saved: {
-		type: Number,
-		default: 0
+		type: Date
 	}
 	// TODO: user through basic auth
 	// user: {
