@@ -7,7 +7,7 @@ module.exports = function(app) {
 	// Scores Routes
 	app.route('/scores')
 		.get(scores.list)
-		.post(users.requiresLogin, scores.create);
+		.post(scores.create);
 
 	app.route('/scores/:scoreId')
 		.get(scores.read)
