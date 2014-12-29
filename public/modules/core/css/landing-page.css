@@ -91,6 +91,10 @@ table th {
     text-shadow: none;
 }
 
+table tr.custom > td {
+    background-color: #53687c;
+}
+
 .glyphicon-arrow-up {
     color: #279a5d;
 }
