@@ -69,6 +69,28 @@ exports.delete = function(req, res) {
 	});
 };
 
+exports.deleteLast = function(req, res) {
+	Score.find().limit(1).sort({$natural:-1}).exec(function(err, scores) {
+		if (err) return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
+
+		if (!scores || scores.length === 0) return res.status(400).send({
+			message: 'No scores found'
+		});
+
+		scores[0].remove(function(err) {
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.jsonp(scores[0]);
+			}
+		});
+	});
+};
+
 /**
  * List of Scores
  */

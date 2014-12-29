@@ -9,6 +9,9 @@ module.exports = function(app) {
 		.get(scores.list)
 		.post(scores.create);
 
+	app.route('/scores/last')
+		.delete(scores.deleteLast);
+
 	app.route('/scores/:scoreId')
 		.get(scores.read)
 		.put(users.requiresLogin, scores.hasAuthorization, scores.update)
