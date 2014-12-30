@@ -46,7 +46,8 @@ exports.list = function(req, res) {
               rank: defaultRank,
               games: 0,
               wins: 0,
-              loses: 0
+              loses: 0,
+              form: ''
             };
           }
 
@@ -55,7 +56,8 @@ exports.list = function(req, res) {
               rank: defaultRank,
               games: 0,
               wins: 0,
-              loses: 0
+              loses: 0,
+              form: ''
             };
           }
 
@@ -76,6 +78,9 @@ exports.list = function(req, res) {
 
             rank[teamA]['wins'] = rank[teamA]['wins'] + 1 || 1;
             rank[teamB]['loses'] = rank[teamB]['loses'] + 1 || 1;
+
+            rank[teamA]['form'] += 'W';
+            rank[teamB]['form'] += 'L';
           }
           // Calculate ranking when teamB wins
           else if (teamAScore < teamBScore) {
@@ -90,6 +95,9 @@ exports.list = function(req, res) {
 
             rank[teamB]['wins'] = rank[teamB]['wins'] + 1 || 1;
             rank[teamA]['loses'] = rank[teamA]['loses'] + 1 || 1;
+
+            rank[teamA]['form'] += 'L';
+            rank[teamB]['form'] += 'W';
           }
         }
               // Doubles
@@ -110,7 +118,8 @@ exports.list = function(req, res) {
             rank: defaultRank,
             games: 0,
             wins: 0,
-            loses: 0
+            loses: 0,
+            form: ''
           };
         }
 
@@ -119,7 +128,8 @@ exports.list = function(req, res) {
             rank: defaultRank,
             games: 0,
             wins: 0,
-            loses: 0
+            loses: 0,
+            form: ''
           };
         }
 
@@ -128,7 +138,8 @@ exports.list = function(req, res) {
             rank: defaultRank,
             games: 0,
             wins: 0,
-            loses: 0
+            loses: 0,
+            form: ''
           };
         }
 
@@ -137,7 +148,8 @@ exports.list = function(req, res) {
             rank: defaultRank,
             games: 0,
             wins: 0,
-            loses: 0
+            loses: 0,
+            form: ''
           };
         }
 
@@ -177,6 +189,11 @@ exports.list = function(req, res) {
           rank[teamAP2]['wins'] = rank[teamAP2]['wins'] + 1 || 1;
           rank[teamBP1]['loses'] = rank[teamBP1]['loses'] + 1 || 1;
           rank[teamBP2]['loses'] = rank[teamBP2]['loses'] + 1 || 1;
+
+          rank[teamAP1]['form'] += 'W';
+          rank[teamAP2]['form'] += 'W';
+          rank[teamBP1]['form'] += 'L';
+          rank[teamBP2]['form'] += 'L';
         } // Calculate ranking when teamB wins
         else if (teamAScore < teamBScore) {
           resultRank = calculate(
@@ -204,6 +221,11 @@ exports.list = function(req, res) {
           rank[teamAP2]['loses'] = rank[teamAP2]['loses'] + 1 || 1;
           rank[teamBP1]['wins'] = rank[teamBP1]['wins'] + 1 || 1;
           rank[teamBP2]['wins'] = rank[teamBP2]['wins'] + 1 || 1;
+
+          rank[teamAP1]['form'] += 'L';
+          rank[teamAP2]['form'] += 'L';
+          rank[teamBP1]['form'] += 'W';
+          rank[teamBP2]['form'] += 'W';
         }
       }
       });
@@ -217,6 +239,7 @@ exports.list = function(req, res) {
             games: rank[team]['games'],
             wins: rank[team]['wins'],
             loses: rank[team]['loses'],
+            form: rank[team]['form'],
             change: (rank[team]['rank'] - rank[team]['rank_before'])
           });
         }

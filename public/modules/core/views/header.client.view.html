@@ -1,12 +1,19 @@
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+<nav role="navigation" class="navbar navbar-default navbar-fixed-top">
   <div class="container" data-ng-controller="HeaderController">
-  	<div class="navbar-header">
-      <a href="/#!/" class="navbar-brand">Pure360 Foosball</a>
-  	</div>
-    <div class="collapse navbar-collapse">
-      <ul class="nav navbar-nav navbar-left">
-        <li><a href="/#!/scores" class="navbar">Scores</a></li>
-      </ul>
+    <div class="navbar-header">
+        <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a href="/#!/" class="navbar-brand">Pure360 Foosball</a>
+    </div>
+    <div id="navbarCollapse" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li><a href="/#!/">Home</a></li>
+            <li><a href="/#!/scores">Scores</a></li>
+        </ul>
     </div>
   </div>
 </nav>
