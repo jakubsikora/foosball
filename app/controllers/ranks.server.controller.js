@@ -47,7 +47,8 @@ exports.list = function(req, res) {
               games: 0,
               wins: 0,
               loses: 0,
-              form: ''
+              form: '',
+              last: null
             };
           }
 
@@ -57,7 +58,8 @@ exports.list = function(req, res) {
               games: 0,
               wins: 0,
               loses: 0,
-              form: ''
+              form: '',
+              last: null
             };
           }
 
@@ -81,6 +83,9 @@ exports.list = function(req, res) {
 
             rank[teamA]['form'] += 'W';
             rank[teamB]['form'] += 'L';
+
+            rank[teamA]['last'] = score.saved;
+            rank[teamB]['last'] = score.saved;
           }
           // Calculate ranking when teamB wins
           else if (teamAScore < teamBScore) {
@@ -98,6 +103,9 @@ exports.list = function(req, res) {
 
             rank[teamA]['form'] += 'L';
             rank[teamB]['form'] += 'W';
+
+            rank[teamA]['last'] = score.saved;
+            rank[teamB]['last'] = score.saved;
           }
         }
               // Doubles
@@ -119,7 +127,8 @@ exports.list = function(req, res) {
             games: 0,
             wins: 0,
             loses: 0,
-            form: ''
+            form: '',
+            last: null
           };
         }
 
@@ -129,7 +138,8 @@ exports.list = function(req, res) {
             games: 0,
             wins: 0,
             loses: 0,
-            form: ''
+            form: '',
+            last: null
           };
         }
 
@@ -139,7 +149,8 @@ exports.list = function(req, res) {
             games: 0,
             wins: 0,
             loses: 0,
-            form: ''
+            form: '',
+            last: null
           };
         }
 
@@ -149,7 +160,8 @@ exports.list = function(req, res) {
             games: 0,
             wins: 0,
             loses: 0,
-            form: ''
+            form: '',
+            last: null
           };
         }
 
@@ -194,6 +206,11 @@ exports.list = function(req, res) {
           rank[teamAP2]['form'] += 'W';
           rank[teamBP1]['form'] += 'L';
           rank[teamBP2]['form'] += 'L';
+
+          rank[teamAP1]['last'] = score.saved;
+          rank[teamAP1]['last'] = score.saved;
+          rank[teamBP1]['last'] = score.saved;
+          rank[teamBP1]['last'] = score.saved;
         } // Calculate ranking when teamB wins
         else if (teamAScore < teamBScore) {
           resultRank = calculate(
@@ -226,6 +243,11 @@ exports.list = function(req, res) {
           rank[teamAP2]['form'] += 'L';
           rank[teamBP1]['form'] += 'W';
           rank[teamBP2]['form'] += 'W';
+
+          rank[teamAP1]['last'] = score.saved;
+          rank[teamAP1]['last'] = score.saved;
+          rank[teamBP1]['last'] = score.saved;
+          rank[teamBP1]['last'] = score.saved;
         }
       }
       });
@@ -240,6 +262,7 @@ exports.list = function(req, res) {
             wins: rank[team]['wins'],
             loses: rank[team]['loses'],
             form: rank[team]['form'],
+            last: rank[team]['last'],
             change: (rank[team]['rank'] - rank[team]['rank_before'])
           });
         }

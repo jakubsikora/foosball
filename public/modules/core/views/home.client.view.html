@@ -8,30 +8,35 @@
     <div class="col-md-12 table-responsive">
       <table class="table table-bordered table-condensed">
           <tr class="info">
-              <th>Rank</th>
               <th>Player</th>
+              <th>Rank</th>
+              <th>Change</th>
               <th>Games</th>
               <th>Wins</th>
               <th>Loses</th>
-              <th>Change</th>
               <th>Form (Last 5 games)</th>
+              <th>Last played</th>
           </tr>
           <tr class="custom"
               ng-repeat="rank in data.ranks">
-            <td>{{ rank.rank }}</td>
             <td>{{ rank.team }}</td>
+            <td>
+              {{ rank.rank }}
+            </td>
+            <td>
+              ({{ rank.change }}
+                <i class="glyphicon "
+                   ng-class="{
+                    'glyphicon-arrow-up' : rank.change > 0,
+                    'glyphicon-arrow-down' : rank.change < 0
+                    }" ></i>
+              )
+            </td>
             <td>{{ rank.games }}</td>
             <td>{{ rank.wins }}</td>
             <td>{{ rank.loses }}</td>
-            <td>
-              {{ rank.change }}
-              <i class="glyphicon "
-                 ng-class="{
-                  'glyphicon-arrow-up' : rank.change > 0,
-                  'glyphicon-arrow-down' : rank.change < 0
-                  }" ></i>
-            </td>
             <td>{{ rank.form | limitTo: -5 }}</td>
+            <td>{{ rank.last | date: 'EEEE, MMMM d, y'}}</td>
           </tr>
       </table>
     </div>
