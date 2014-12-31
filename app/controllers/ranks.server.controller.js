@@ -208,9 +208,9 @@ exports.list = function(req, res) {
           rank[teamBP2]['form'] += 'L';
 
           rank[teamAP1]['last'] = score.saved;
-          rank[teamAP1]['last'] = score.saved;
+          rank[teamAP2]['last'] = score.saved;
           rank[teamBP1]['last'] = score.saved;
-          rank[teamBP1]['last'] = score.saved;
+          rank[teamBP2]['last'] = score.saved;
         } // Calculate ranking when teamB wins
         else if (teamAScore < teamBScore) {
           resultRank = calculate(
@@ -245,9 +245,9 @@ exports.list = function(req, res) {
           rank[teamBP2]['form'] += 'W';
 
           rank[teamAP1]['last'] = score.saved;
-          rank[teamAP1]['last'] = score.saved;
+          rank[teamAP2]['last'] = score.saved;
           rank[teamBP1]['last'] = score.saved;
-          rank[teamBP1]['last'] = score.saved;
+          rank[teamBP2]['last'] = score.saved;
         }
       }
       });

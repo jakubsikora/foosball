@@ -8,6 +8,7 @@
     <div class="col-md-12 table-responsive">
       <table class="table table-bordered table-condensed">
           <tr class="info">
+              <th>Pos</th>
               <th>Player</th>
               <th>Rank</th>
               <th>Change</th>
@@ -19,6 +20,7 @@
           </tr>
           <tr class="custom"
               ng-repeat="rank in data.ranks">
+            <td>{{ $index + 1 }}</td>
             <td>{{ rank.team }}</td>
             <td>
               {{ rank.rank }}
