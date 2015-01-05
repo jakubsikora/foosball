@@ -171,4 +171,5 @@ module.exports = function(grunt) {
 
 	// Heroku build
 	grunt.registerTask('heroku:production', ['loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
+
 };
