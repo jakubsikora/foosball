@@ -28,7 +28,7 @@ h6 {
     color: #f8f8f8;
     background: url(http://www.kickerkult.de/WebRoot/Store7/Shops/61190833/4D08/BC28/5A09/9A13/DDC1/C0A8/28B9/CC67/pro_champion_-_2.jpg) no-repeat center center;
     background-size: cover;
-    min-height: 800px;
+    min-height: 100vh;
 }
 
 .intro-message {
