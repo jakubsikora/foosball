@@ -29,6 +29,7 @@
     "grunt": "*",
     "grunt-contrib": "*",
     "grunt-cli": "~0.1.13",
+    "grunt-ng-annotate": "~0.4.0",
     "helmet": "~0.4.0",
     "lodash": "~2.4.1",
     "method-override": "~2.2.0",
