@@ -8,7 +8,7 @@
     "npm": "1.4.x"
   },
   "scripts": {
-    "start": "grunt",
+    "start": "grunt build && grunt",
     "test": "grunt test",
     "postinstall": "bower install --config.interactive=false"
   },
