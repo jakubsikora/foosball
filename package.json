@@ -41,7 +41,10 @@
     "passport-local": "~1.0.0",
     "passport-twitter": "~1.0.2",
     "q": "^1.1.2",
-    "swig": "~1.4.1"
+    "swig": "~1.4.1",
+    "grunt": "*",
+    "grunt-contrib": "*",
+    "grunt-ng-annotate": "~0.4.0"
   },
   "devDependencies": {
     "supertest": "~0.14.0",
