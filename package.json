@@ -26,10 +26,7 @@
     "express-session": "~1.8.2",
     "forever": "~0.11.0",
     "glob": "~4.0.5",
-    "grunt": "*",
-    "grunt-contrib": "*",
     "grunt-cli": "~0.1.13",
-    "grunt-ng-annotate": "~0.4.0",
     "helmet": "~0.4.0",
     "lodash": "~2.4.1",
     "method-override": "~2.2.0",
@@ -44,9 +41,7 @@
     "passport-local": "~1.0.0",
     "passport-twitter": "~1.0.2",
     "q": "^1.1.2",
-    "swig": "~1.4.1"
-  },
-  "devDependencies": {
+    "swig": "~1.4.1",
     "supertest": "~0.14.0",
     "should": "~4.0.4",
     "grunt-env": "~0.4.1",
