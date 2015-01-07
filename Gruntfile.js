@@ -150,8 +150,8 @@ module.exports = function(grunt) {
 		var init = require('./config/init')();
 		var config = require('./config/config');
 
-		console.log('config js', config.assets.js);
-		console.log('config css', config.assets.css);
+		console.log('config.assets.js', config.assets.js);
+		console.log('config.assets.css', config.assets.css);
 
 		grunt.config.set('applicationJavaScriptFiles', config.assets.js);
 		grunt.config.set('applicationCSSFiles', config.assets.css);
@@ -167,10 +167,8 @@ module.exports = function(grunt) {
 	grunt.registerTask('lint', ['jshint', 'csslint']);
 
 	// Build task(s).
-	grunt.registerTask('build', ['loadConfig']);
+	grunt.registerTask('build', ['loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
 
 	// Test task.
 	grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
-
-	grunt.registerTask('heroku:production', ['loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
 };
