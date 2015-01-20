@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-	db: 'mongodb://foosball:Foosball1!@ds027751.mongolab.com:27751/foosball',
+	db: 'mongodb://localhost:27017/foosball',
 	app: {
 		title: 'Foosball - Development Environment'
 	},
