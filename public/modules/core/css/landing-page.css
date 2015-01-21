@@ -21,6 +21,25 @@ h6 {
     font-weight: 600;
 }
 
+.navbar.navbar-custom {
+    color: #FFFFFF;
+    background-color: #111111;
+    border-bottom: 1px solid #000000;
+}
+
+
+.navbar-header a,
+.nav li > a {
+    color: inherit;
+    text-shadow: none;
+}
+
+.nav li > a:hover,
+.nav li > a:focus {
+    color: inherit;
+    background-color: #000000;
+}
+
 .intro-header {
     padding-top: 100px; /* If you're making other pages, make sure there is 50px of padding to make sure the navbar doesn't overlap content! */
     padding-bottom: 50px;
@@ -31,9 +50,17 @@ h6 {
     min-height: 100vh;
 }
 
+.intro-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.7);
+}
+
 .intro-message {
     position: relative;
-    padding-top: 5%;
     padding-bottom: 0;
 }
 
@@ -83,16 +110,24 @@ h6 {
 
 table {
     text-shadow: 1px 1px 3px rgba(0,0,0,1);
-}
-
-table th {
-    text-align: center;
-    color: #555;
+    color: #333333;
     text-shadow: none;
 }
 
-table tr.custom > td {
-    background-color: #53687c;
+.table > tbody > tr th {
+    text-align: center;
+    color: #FFFFFF;
+    text-shadow: none;
+    background-color: #111111;
+    border-color: #000;
+}
+
+table tr.custom:nth-child(even) {
+    background-color: #EBEBEB;
+}
+
+table tr.custom:nth-child(odd) {
+    background-color: #F2F2F2;
 }
 
 .glyphicon-arrow-up {
