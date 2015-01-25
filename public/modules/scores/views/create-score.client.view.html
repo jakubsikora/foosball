@@ -1,27 +1,106 @@
 <section data-ng-controller="ScoresController">
   <div class="page-header">
-    <h1>New Score</h1>
+    <h1>Record Score</h1>
   </div>
+
   <div class="col-md-12">
+    <div data-ng-show="error"class="alert alert-danger">
+      <span class="glyphicon glyphicon-exclamation-sign"></span>
+      <span class="sr-only">Error:</span>
+      <span data-ng-bind="error"></span>
+    </div>
+
     <form class="form-horizontal" data-ng-submit="create()" novalidate>
       <fieldset>
-        <div class="form-group">
-          <label class="control-label" for="name">Name</label>
-          <div class="controls">
-            <input type="text" data-ng-model="name" id="name" class="form-control" placeholder="Name" required>
+        <div class="row">
+          <div class="col-sm-5">
+            <div class="form-group">
+              <label class="control-label" for="teamA">Team A</label>
+
+              <div class="controls sr-only">
+                <input type="text" data-ng-model="teamA" id="teamA" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label sr-only" for="teamAScore">
+                Team A Score
+              </label>
+
+              <div class="controls">
+                <input type="range"
+                       data-ng-model="teamAScore"
+                       id="teamAScore"
+                       min="0" max="10" step="1" value="10" />
+              </div>
+            </div>
+
+            <div class="form-group players">
+              <button class="btn btn-primary btn-lg player"
+                      ng-repeat="player in teamA"
+                      ng-click="removePlayer('teamA', player)">
+                {{ player }}
+              </button>
+            </div>
+
+            <div class="form-group players">
+              <button class="btn btn-default player"
+                      ng-repeat="player in data.players.teamAAvailable"
+                      ng-click="addPlayer('teamA', player)">
+                {{ player }}
+              </button>
+            </div>
+          </div>
+
+          <div class="col-sm-2 versus">
+            <p>VS.</p>
+          </div>
+
+          <div class="col-sm-5">
+            <div class="form-group">
+              <label class="control-label" for="teamB">Team B</label>
+
+              <div class="controls sr-only">
+                <input type="text" data-ng-model="teamB" id="teamB" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label sr-only" for="teamBScore">
+                Team B Score
+              </label>
+
+              <div class="controls">
+                <input class="teamb"
+                       type="range"
+                       data-ng-model="teamBScore"
+                       id="teamBScore"
+                       min="0" max="10" step="1" value="0" />
+              </div>
+            </div>
+
+            <div class="form-group players">
+              <button class="btn btn-danger btn-lg player"
+                      ng-repeat="player in teamB"
+                      ng-click="removePlayer('teamB', player)">
+                {{ player }}
+              </button>
+            </div>
+
+            <div class="form-group players">
+              <button class="btn btn-default player"
+                      ng-repeat="player in data.players.teamBAvailable"
+                      ng-click="addPlayer('teamB', player)">
+                {{ player }}
+              </button>
+            </div>
           </div>
         </div>
+
         <div class="form-group">
-          <input type="submit" class="btn btn-default">
+          <input type="submit" class="btn btn-success btn-lg">
         </div>
-			  <div data-ng-show="error" class="text-danger">
-				  <strong data-ng-bind="error"></strong>
-			 </div>
       </fieldset>
     </form>
-
-    <button class="btn btn-default" ng-repeat="player in data.players">
-      {{ player }}
-    </button>
   </div>
 </section>

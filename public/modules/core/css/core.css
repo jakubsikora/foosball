@@ -4,9 +4,9 @@
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
 	display: none !important;
 }
-.ng-invalid.ng-dirty{
+input:not([type="range"]).ng-invalid.ng-dirty{
     border-color:#FA787E;
 }
-.ng-valid.ng-dirty{
+input:not([type="range"]).ng-valid.ng-dirty{
     border-color:#78FA89;
 }

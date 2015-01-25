@@ -25,7 +25,7 @@ angular.module('scores')
       var sorted = team.slice();
 
       return sorted.sort(function(a, b) {
-        return a.localeCompare(b);
+        return a.replace(/^@/, '').localeCompare(b.replace(/^@/, ''));
       });
     };
 
@@ -137,7 +137,7 @@ angular.module('scores')
         , bTeams = games.map(mapTeamB)
         , teams = aTeams.concat(bTeams);
 
-      return uniquePlayers(teams);
+      return sortTeam(uniquePlayers(teams));
     };
 
     var getTeamGames = function(games, team, fuzzy) {

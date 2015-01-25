@@ -1,5 +1,7 @@
 'use strict';
 
+var autoprefixer = require('autoprefixer-core');
+
 module.exports = function(grunt) {
 	// Unified Watch Object
 	var watchFiles = {
@@ -43,7 +45,7 @@ module.exports = function(grunt) {
 			},
 			clientCSS: {
 				files: watchFiles.clientCSS,
-				tasks: ['csslint'],
+				tasks: ['loadConfig', 'csslint', 'cssmin', 'postcss'],
 				options: {
 					livereload: true
 				}
@@ -82,6 +84,16 @@ module.exports = function(grunt) {
 				}
 			}
 		},
+		postcss: {
+      options: {
+        processors: [
+          autoprefixer({ browsers: ['last 2 version'] }).postcss
+        ]
+      },
+      dist: {
+	      src: 'public/dist/application.min.css'
+	    }
+    },
 		nodemon: {
 			dev: {
 				script: 'server.js',
@@ -98,7 +110,7 @@ module.exports = function(grunt) {
 					'web-port': 1337,
 					'web-host': 'localhost',
 					'debug-port': 5858,
-					'save-live-edit': true,
+					'save-live-edit': false,
 					'no-preload': true,
 					'stack-trace-limit': 50,
 					'hidden': []
@@ -158,7 +170,7 @@ module.exports = function(grunt) {
 	});
 
 	// Default task(s).
-	grunt.registerTask('default', ['lint', 'concurrent:default']);
+	grunt.registerTask('default', ['loadConfig', 'lint', 'cssmin', 'postcss', 'concurrent:default']);
 
 	// Debug task.
 	grunt.registerTask('debug', ['lint', 'concurrent:debug']);
@@ -167,7 +179,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('lint', ['jshint', 'csslint']);
 
 	// Build task(s).
-	grunt.registerTask('build', ['loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
+	grunt.registerTask('build', ['loadConfig', 'ngAnnotate', 'uglify', 'cssmin', 'postcss']);
 
 	// Test task.
 	grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);

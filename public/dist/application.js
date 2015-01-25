@@ -55,6 +55,10 @@ ApplicationConfiguration.registerModule('ranks');
 ApplicationConfiguration.registerModule('scores');
 'use strict';
 
+// Use applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('steves');
+'use strict';
+
 // Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('users');
 
@@ -322,20 +326,385 @@ angular.module('scores').config(['$stateProvider',
 'use strict';
 
 // Scores controller
-angular.module('scores').controller('ScoresController', ['$scope', '$stateParams', '$location', 'Authentication', 'Scores',
-	function($scope, $stateParams, $location, Authentication, Scores ) {
+angular.module('scores').controller('ScoresController', ['$scope', '$stateParams', '$location', 'Authentication', 'Scores', 'scoreUtils',
+	function($scope, $stateParams, $location, Authentication, Scores, scoreUtils) {
 		$scope.authentication = Authentication;
 
-    $scope.data = {};
-    $scope.data.scores = Scores.query();
+    $scope.data = {
+      scores: Scores.query(),
+      players: []
+    };
+
+    $scope.data.scores.$promise.then(function(scores) {
+      $scope.data.players = scoreUtils.getPlayers(scores);
+    });
+
+    // Create new Score
+    $scope.create = function() {
+      // Create new Score object
+      var score = new Scores({
+        teamA: this.teamA,
+        teamB: this.teamB,
+        teamAScore: this.teamAScore,
+        teamBScore: this.teamBScore
+      });
+
+      // Redirect after save
+      score.$save(function(response) {
+        $location.path('scores/' + response._id);
+
+        // Clear form fields
+        $scope.teamA = '';
+        $scope.teamB = '';
+        $scope.teamAScore = 0;
+        $scope.teamBScore = 0;
+      }, function(errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Remove existing Score
+    $scope.remove = function(score) {
+      if (score) {
+        score.$remove();
+
+        for (var i in $scope.scores) {
+          if ($scope.scores [i] === score) {
+            $scope.scores.splice(i, 1);
+          }
+        }
+      } else {
+        $scope.score.$remove(function() {
+          $location.path('scores');
+        });
+      }
+    };
+
+    // Update existing Score
+    $scope.update = function() {
+      var score = $scope.score;
+
+      score.$update(function() {
+        $location.path('scores/' + score._id);
+      }, function(errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+    // Find a list of Scores
+    $scope.find = function() {
+      $scope.scores = Scores.query();
+    };
+
+    // Find existing Score
+    $scope.findOne = function() {
+      $scope.score = Scores.get({
+        scoreId: $stateParams.scoreId
+      });
+    };
   }
 ]);
 'use strict';
 
 //Scores service used to communicate Scores REST endpoints
-angular.module('scores').factory('Scores', ['$resource',
+angular.module('scores')
+
+  .factory('Scores', ['$resource',
+    function($resource) {
+      return $resource('scores/:scoreId', { scoreId: '@_id'
+      }, {
+        update: {
+          method: 'PUT'
+        }
+      });
+    }
+  ])
+
+  .service('scoreUtils', [function() {
+    var findTeamPlayers = function(team) {
+      return sortTeam(team.split(/,|and| /).filter(function(player) {
+        return player !== '';
+      }));
+    };
+
+    var sortTeam = function(team) {
+      var sorted = team.slice();
+
+      return sorted.sort(function(a, b) {
+        return a.localeCompare(b);
+      });
+    };
+
+    var teamKey = function(team) {
+      return sortTeam(team).join(', ');
+    };
+
+    // Compare teamA to teamB
+    // fuzzy mode makes teamB match teamA is teamB is a superset
+    var teamsMatch = function(teamA, teamB, fuzzy) {
+      if (fuzzy) {
+        // Make sure teamB contains all of teamA
+        return teamA.every(function(player) {
+          return teamB.indexOf(player) !== -1;
+        });
+      } else {
+        // Make sure the teams are an exact match
+        return teamKey(teamA) === teamKey(teamB);
+      }
+    };
+
+    var byTeam = function(team, fuzzy) {
+      return function(game) {
+        var isTeamA = teamsMatch(team, game.teamA, fuzzy)
+          , isTeamB = teamsMatch(team, game.teamB, fuzzy);
+
+        return isTeamA || isTeamB;
+      };
+    };
+
+    var byWin = function(team, fuzzy) {
+      return function(game) {
+        var isTeamA = teamsMatch(team, game.teamA, fuzzy)
+          , isTeamB = teamsMatch(team, game.teamB, fuzzy)
+          , teamABeatTeamB = game.teamAScore > game.teamBScore
+          , teamBBeatTeamA = game.teamBScore > game.teamAScore;
+
+        return (isTeamA && teamABeatTeamB) || (isTeamB && teamBBeatTeamA);
+      };
+    };
+
+    var byLose = function(team, fuzzy) {
+      return function(game) {
+        var isTeamA = teamsMatch(team, game.teamA, fuzzy)
+          , isTeamB = teamsMatch(team, game.teamB, fuzzy)
+          , teamABeatTeamB = game.teamAScore > game.teamBScore
+          , teamBBeatTeamA = game.teamBScore > game.teamAScore;
+
+        return (isTeamA && teamBBeatTeamA) || (isTeamB && teamABeatTeamB);
+      };
+    };
+
+    var byDraw = function() {
+      return function(game) {
+        return game.teamAScore === game.teamBScore;
+      };
+    };
+
+    var percent = function(portion, of) {
+      if (of === 0) return 0;
+
+      return (portion / of) * 100;
+    };
+
+    var decimal = function(val, precision) {
+      return val.toFixed(precision > -1 ? precision : 2);
+    };
+
+    var mapTeamA = function(game) {
+      return game.teamA;
+    };
+
+    var mapTeamB = function(game) {
+      return game.teamB;
+    };
+
+    var findTeam = function(team, teams, fuzzy) {
+      return !teams.every(function(otherTeam) {
+        return !teamsMatch(team, otherTeam, fuzzy);
+      });
+    };
+
+    var uniqueTeams = function(allTeams) {
+      return allTeams.reduce(function(teams, team) {
+        if (!findTeam(team, teams)) teams.push(team);
+        return teams;
+      }, []);
+    };
+
+    var getTeams = function(games) {
+      var aTeams = games.map(mapTeamA)
+        , bTeams = games.map(mapTeamB)
+        , teams = aTeams.concat(bTeams);
+
+      return uniqueTeams(teams);
+    };
+
+    // uniquePlayers is basically just uniqueTeams but with a flattened list
+    var uniquePlayers = function(allTeams) {
+      return uniqueTeams([].concat.apply([], allTeams).map(function(player) {
+        return [player];
+      })).map(function(players) {
+        return players[0];
+      });
+    };
+
+    var getPlayers = function(games) {
+      var aTeams = games.map(mapTeamA)
+        , bTeams = games.map(mapTeamB)
+        , teams = aTeams.concat(bTeams);
+
+      return uniquePlayers(teams);
+    };
+
+    var getTeamGames = function(games, team, fuzzy) {
+      return games.filter(byTeam(team, fuzzy));
+    };
+
+    var getTeamStats = function(games, team, fuzzy) {
+      var teamGames = getTeamGames(games, team, fuzzy)
+        , wins = teamGames.filter(byWin(team, fuzzy))
+        , loses = teamGames.filter(byLose(team, fuzzy))
+        , draws = teamGames.filter(byDraw());
+
+      return {
+        played: teamGames.length,
+        wins: wins.length,
+        loses: loses.length,
+        draws: draws.length,
+        winPercent: percent(wins.length, teamGames.length),
+        lossPercent: percent(loses.length, teamGames.length),
+        drawPercent: percent(draws.length, teamGames.length)
+      };
+    };
+
+    var sortByRank = function(teamA, teamB) {
+      if (teamA.rank > teamB.rank) return 1;
+      if (teamA.rank < teamB.rank) return -1;
+      return 0;
+    };
+
+    return {
+      findTeamPlayers: findTeamPlayers,
+      sortTeam: sortTeam,
+      teamKey: teamKey,
+      teamsMatch: teamsMatch,
+      byTeam: byTeam,
+      byWin: byWin,
+      byLose: byLose,
+      byDraw: byDraw,
+      percent: percent,
+      decimal: decimal,
+      mapTeamA: mapTeamA,
+      mapTeamB: mapTeamB,
+      findTeam: findTeam,
+      uniqueTeams: uniqueTeams,
+      getTeams: getTeams,
+      uniquePlayers: uniquePlayers,
+      getPlayers: getPlayers,
+      getTeamGames: getTeamGames,
+      getTeamStats: getTeamStats
+    };
+  }]);
+
+console.log('foo');
+'use strict';
+
+// Configuring the Articles module
+angular.module('steves').run(['Menus',
+	function(Menus) {
+		// Set top bar menu items
+		Menus.addMenuItem('topbar', 'Steves', 'steves', 'dropdown', '/steves(/create)?');
+		Menus.addSubMenuItem('topbar', 'steves', 'List Steves', 'steves');
+		Menus.addSubMenuItem('topbar', 'steves', 'New Steve', 'steves/create');
+	}
+]);
+'use strict';
+
+//Setting up route
+angular.module('steves').config(['$stateProvider',
+	function($stateProvider) {
+		// Steves state routing
+		$stateProvider.
+		state('listSteves', {
+			url: '/steves',
+			templateUrl: 'modules/steves/views/list-steves.client.view.html'
+		}).
+		state('createSteve', {
+			url: '/steves/create',
+			templateUrl: 'modules/steves/views/create-steve.client.view.html'
+		}).
+		state('viewSteve', {
+			url: '/steves/:steveId',
+			templateUrl: 'modules/steves/views/view-steve.client.view.html'
+		}).
+		state('editSteve', {
+			url: '/steves/:steveId/edit',
+			templateUrl: 'modules/steves/views/edit-steve.client.view.html'
+		});
+	}
+]);
+'use strict';
+
+// Steves controller
+angular.module('steves').controller('StevesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Steves',
+	function($scope, $stateParams, $location, Authentication, Steves) {
+		$scope.authentication = Authentication;
+
+		// Create new Steve
+		$scope.create = function() {
+			// Create new Steve object
+			var steve = new Steves ({
+				name: this.name
+			});
+
+			// Redirect after save
+			steve.$save(function(response) {
+				$location.path('steves/' + response._id);
+
+				// Clear form fields
+				$scope.name = '';
+			}, function(errorResponse) {
+				$scope.error = errorResponse.data.message;
+			});
+		};
+
+		// Remove existing Steve
+		$scope.remove = function(steve) {
+			if ( steve ) { 
+				steve.$remove();
+
+				for (var i in $scope.steves) {
+					if ($scope.steves [i] === steve) {
+						$scope.steves.splice(i, 1);
+					}
+				}
+			} else {
+				$scope.steve.$remove(function() {
+					$location.path('steves');
+				});
+			}
+		};
+
+		// Update existing Steve
+		$scope.update = function() {
+			var steve = $scope.steve;
+
+			steve.$update(function() {
+				$location.path('steves/' + steve._id);
+			}, function(errorResponse) {
+				$scope.error = errorResponse.data.message;
+			});
+		};
+
+		// Find a list of Steves
+		$scope.find = function() {
+			$scope.steves = Steves.query();
+		};
+
+		// Find existing Steve
+		$scope.findOne = function() {
+			$scope.steve = Steves.get({ 
+				steveId: $stateParams.steveId
+			});
+		};
+	}
+]);
+'use strict';
+
+//Steves service used to communicate Steves REST endpoints
+angular.module('steves').factory('Steves', ['$resource',
 	function($resource) {
-		return $resource('scores/:scoreId', { scoreId: '@_id'
+		return $resource('steves/:steveId', { steveId: '@_id'
 		}, {
 			update: {
 				method: 'PUT'
