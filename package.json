@@ -62,9 +62,7 @@
     "karma-coverage": "~0.2.0",
     "karma-chrome-launcher": "~0.1.2",
     "karma-firefox-launcher": "~0.1.3",
-    "karma-phantomjs-launcher": "~0.1.2"
-  },
-  "devDependencies": {
+    "karma-phantomjs-launcher": "~0.1.2",
     "autoprefixer-core": "^5.0.0",
     "grunt-postcss": "^0.3.0"
   }
