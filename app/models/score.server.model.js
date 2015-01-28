@@ -26,11 +26,6 @@ var ScoreSchema = new Schema({
     type: Date,
     default: Date.now
   }
-  // TODO: user through basic auth
-  // user: {
-  //  type: Schema.ObjectId,
-  //  ref: 'User'
-  // }
 });
 
 mongoose.model('Score', ScoreSchema);

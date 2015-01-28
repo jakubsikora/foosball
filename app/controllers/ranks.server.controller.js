@@ -33,10 +33,11 @@ exports.list = function(req, res) {
       });
     } else {
       scores.forEach(function(score) {
+
         if (score.teamA.length === 1 && score.teamB.length === 1) {
           // Proxy
-          teamA = score.teamA;
-          teamB = score.teamB;
+          teamA = score.teamA[0];
+          teamB = score.teamB[0];
           teamAScore = score.teamAScore;
           teamBScore = score.teamBScore;
 
@@ -89,8 +90,9 @@ exports.list = function(req, res) {
           }
           // Calculate ranking when teamB wins
           else if (teamAScore < teamBScore) {
+
             resultRank = calculate(
-              rank[teamA], rank[teamB], false, true);
+              rank[teamA]['rank'], rank[teamB]['rank'], false, true);
 
             rank[teamA]['rank'] = resultRank[0];
             rank[teamB]['rank'] = resultRank[1];
