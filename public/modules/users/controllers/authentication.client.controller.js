@@ -24,6 +24,9 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				// If successful we assign the response to the global user model
 				$scope.authentication.user = response;
 
+				$scope.authentication.user.isAdmin =
+					(~$scope.authentication.user.roles.indexOf('admin') ? true : false);
+
 				// And redirect to the index page
 				$location.path('/');
 			}).error(function(response) {
