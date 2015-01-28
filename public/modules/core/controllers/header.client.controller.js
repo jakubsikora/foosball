@@ -3,6 +3,12 @@
 angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus',
 	function($scope, Authentication, Menus) {
 		$scope.authentication = Authentication;
+
+		if ($scope.authentication.user) {
+			$scope.authentication.user.isAdmin =
+				(~$scope.authentication.user.roles.indexOf('admin') ? true : false);
+		}
+
 		$scope.isCollapsed = false;
 		$scope.menu = Menus.getMenu('topbar');
 

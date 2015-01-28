@@ -34,6 +34,17 @@ exports.requiresLogin = function(req, res, next) {
 	next();
 };
 
+
+exports.isAdmin = function(req, res, next) {
+	if (!~req.user.roles.indexOf('admin')) {
+		return res.status(403).send({
+			message: 'User is not authorized'
+		});
+	} else {
+		next();
+	}
+};
+
 /**
  * User authorizations routing middleware
  */
