@@ -71,7 +71,7 @@ var rankScoreDraw = function(ranks, score) {
       score: score,
       previous: previousRank,
       form: drawingForm,
-      played: previousRank.rank + 1,
+      played: previousRank.played + 1,
       wins: previousRank.wins,
       loses: previousRank.loses,
       draws: previousRank.draws + 1
@@ -96,7 +96,7 @@ var rankScoreWin = function(ranks, score, winners, losers) {
       score: score,
       previous: winnerCurrentRank,
       form: winningForm,
-      played: winnerCurrentRank.rank + 1,
+      played: winnerCurrentRank.played + 1,
       wins: winnerCurrentRank.wins + 1,
       loses: winnerCurrentRank.loses,
       draws: winnerCurrentRank.draws
@@ -112,7 +112,7 @@ var rankScoreWin = function(ranks, score, winners, losers) {
       score: score,
       previous: loserCurrentRank,
       form: losingForm,
-      played: loserCurrentRank.rank + 1,
+      played: loserCurrentRank.played + 1,
       wins: loserCurrentRank.wins,
       loses: loserCurrentRank.loses + 1,
       draws: loserCurrentRank.draws
