@@ -14,6 +14,7 @@ angular.module('scores')
     }
   ])
 
+  // TODO: this is on the server and the client
   .service('scoreUtils', [function() {
     var findTeamPlayers = function(team) {
       return sortTeam(team.split(/,|and| /).filter(function(player) {
@@ -164,6 +165,14 @@ angular.module('scores')
     var sortByRank = function(teamA, teamB) {
       if (teamA.rank > teamB.rank) return 1;
       if (teamA.rank < teamB.rank) return -1;
+
+      return 0;
+    };
+
+    var sortByDate = function(scoreA, scoreB) {
+      if (scoreA.date > scoreB.date) return 1;
+      if (scoreA.date < scoreB.date) return -1;
+
       return 0;
     };
 
