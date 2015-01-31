@@ -153,10 +153,23 @@ var sortByRank = function(teamA, teamB) {
 };
 
 var sortByDate = function(scoreA, scoreB) {
-  if (scoreA.date > scoreB.date) return 1;
-  if (scoreA.date < scoreB.date) return -1;
+  if (scoreA.saved > scoreB.saved) return 1;
+  if (scoreA.saved < scoreB.saved) return -1;
 
   return 0;
+};
+
+var groupByDate = function(scores) {
+  var dates = {};
+
+  scores.forEach(function(score) {
+    var key = score.saved.toDateString();
+
+    dates[key] = dates[key] || [];
+    dates[key].push(score);
+  });
+
+  return dates;
 };
 
 exports.findTeamPlayers = findTeamPlayers;
@@ -178,3 +191,5 @@ exports.uniquePlayers = uniquePlayers;
 exports.getPlayers = getPlayers;
 exports.getTeamGames = getTeamGames;
 exports.getTeamStats = getTeamStats;
+exports.sortByDate = sortByDate;
+exports.groupByDate = groupByDate;
