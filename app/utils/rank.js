@@ -2,8 +2,7 @@ var libscore = require('./score')
   , elo = require('elo-rank')(15);
 
 var startingRank = 1000
-  , inactive = 7 * 24 * 60 * 60 * 1000 /* 7 days in milliseconds */
-  , penalty = 10
+  , penalty = 2
   , startingForm = '-'
   , winningForm = 'W'
   , losingForm = 'L'
@@ -21,15 +20,14 @@ ranks will look like: {
 };
 */
 var getRanks = function(scores) {
-  var ranks = {};
+  var ranks = {}
+    , players = libscore.getPlayers(scores);
 
-  libscore
-    .getPlayers(scores)
+  players
     .forEach(initPlayer(ranks));
 
-  scores
-    .sort(libscore.sortByDate)
-    .forEach(rankScore(ranks));
+  getScoresByDay(scores)
+    .forEach(rankDayScores(ranks, players));
 
   return ranks;
 };
@@ -42,7 +40,36 @@ var initPlayer = function(ranks) {
       form: startingForm,
       played: 0, wins: 0, loses: 0, draws: 0
     }];
-  }
+  };
+};
+
+var rankDayScores = function(ranks, allPlayers) {
+  return function(day) {
+    var players = libscore.getPlayers(day.scores)
+      , inactivePlayers = allPlayers.filter(function(player) {
+          return players.indexOf(player) < 0;
+        });
+
+    if (isWeekday(day.date)) {
+      inactivePlayers.forEach(function(player) {
+        var previousRank = currentRank(ranks, player);
+
+        ranks[player].push({
+          rank: previousRank.rank - penalty,
+          inactivity: true,
+          score: previousRank.score, // Just proxy the last score
+          previous: previousRank,
+          form: inactiveForm,
+          played: previousRank.played,
+          wins: previousRank.wins,
+          loses: previousRank.loses,
+          draws: previousRank.draws
+        });
+      });
+    }
+
+    return day.scores.forEach(rankScore(ranks));
+  };
 };
 
 var rankScore = function(ranks) {
@@ -157,6 +184,42 @@ var isInactive = function(player, previousScore, currentScore) {
   if (previousScore - currentScore > inactive) return true;
 
   return false;
-}
+};
+
+// Get an array of dates between 2 dates. If `to` isn't included it
+// will default to Date.now(). An entry for `from` and `to` will be included
+// in the results.
+var getDays = function(from, to) {
+  if (!to) to = new Date(Date.now());
+
+  var days = [];
+  for (var x = new Date(from); x <= to; x.setDate(x.getDate() + 1)) {
+    days.push(new Date(x));
+  }
+
+  return days;
+};
+
+var isWeekday = function(date) {
+  var day = date.getDay();
+
+  return day !== 0 && day !== 6;
+};
+
+var getScoresByDay = function(scores) {
+  if (scores.length < 1) return [];
+
+  scores = scores.sort(libscore.sortByDate);
+
+  var days = getDays(scores[0].saved)
+    , scoresByDay = libscore.groupByDate(scores);
+
+  return days.map(function(day) {
+    return {
+      date: day,
+      scores: scoresByDay[day.toDateString()] || []
+    };
+  });
+};
 
 exports.getRanks = getRanks;
