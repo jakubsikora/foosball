@@ -38,7 +38,8 @@ exports.list = function(req, res) {
           loses: currentRank.loses,
           form: form,
           last: currentRank.score.saved,
-          change: currentRank.rank - previousRank.rank
+          change: currentRank.rank - previousRank.rank,
+          penalty: currentRank.penalty
         };
       })
       .sort(function sortByRank(teamA, teamB) {

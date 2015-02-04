@@ -17,6 +17,7 @@
               <th>Loses</th>
               <th>Form (Last 5 games)</th>
               <th>Last played</th>
+              <th>Penalty</th>
           </tr>
           <tr class="custom"
               ng-repeat="rank in data.ranks">
@@ -39,6 +40,7 @@
             <td>{{ rank.loses }}</td>
             <td>{{ rank.form | limitTo: -5 }}</td>
             <td>{{ rank.last | date: 'EEEE, MMMM d, y'}}</td>
+            <td>-{{ rank.penalty }}</td>
           </tr>
       </table>
     </div>

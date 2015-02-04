@@ -38,7 +38,7 @@ var initPlayer = function(ranks) {
       rank: startingRank,
       previous: null,
       form: startingForm,
-      played: 0, wins: 0, loses: 0, draws: 0
+      played: 0, wins: 0, loses: 0, draws: 0, penalty: 0
     }];
   };
 };
@@ -63,7 +63,8 @@ var rankDayScores = function(ranks, allPlayers) {
           played: previousRank.played,
           wins: previousRank.wins,
           loses: previousRank.loses,
-          draws: previousRank.draws
+          draws: previousRank.draws,
+          penalty: previousRank.penalty + penalty
         });
       });
     }
@@ -101,7 +102,8 @@ var rankScoreDraw = function(ranks, score) {
       played: previousRank.played + 1,
       wins: previousRank.wins,
       loses: previousRank.loses,
-      draws: previousRank.draws + 1
+      draws: previousRank.draws + 1,
+      penalty: previousRank.penalty
     });
   });
 };
@@ -126,7 +128,8 @@ var rankScoreWin = function(ranks, score, winners, losers) {
       played: winnerCurrentRank.played + 1,
       wins: winnerCurrentRank.wins + 1,
       loses: winnerCurrentRank.loses,
-      draws: winnerCurrentRank.draws
+      draws: winnerCurrentRank.draws,
+      penalty: winnerCurrentRank.penalty
     });
   });
 
@@ -142,7 +145,8 @@ var rankScoreWin = function(ranks, score, winners, losers) {
       played: loserCurrentRank.played + 1,
       wins: loserCurrentRank.wins,
       loses: loserCurrentRank.loses + 1,
-      draws: loserCurrentRank.draws
+      draws: loserCurrentRank.draws,
+      penalty: loserCurrentRank.penalty
     });
   });
 };
