@@ -196,6 +196,9 @@ var isInactive = function(player, previousScore, currentScore) {
 var getDays = function(from, to) {
   if (!to) to = new Date(Date.now());
 
+  // Ensure we get all scores from the last day
+  to.setHours(23, 59, 59, 999);
+
   var days = [];
   for (var x = new Date(from); x <= to; x.setDate(x.getDate() + 1)) {
     days.push(new Date(x));
