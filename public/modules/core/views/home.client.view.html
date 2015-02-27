@@ -15,7 +15,10 @@
               <th>Games</th>
               <th>Wins</th>
               <th>Loses</th>
-              <th>Form (Last 5 games)</th>
+              <th>PCT</th>
+              <th>Last 5</th>
+              <th>Last 10</th>
+              <th>Streak</th>
               <th>Last played</th>
               <th>Penalty</th>
           </tr>
@@ -38,7 +41,10 @@
             <td>{{ rank.games }}</td>
             <td>{{ rank.wins }}</td>
             <td>{{ rank.loses }}</td>
+            <td>{{ rank.pct | number:3 }}</td>
             <td>{{ rank.form | limitTo: -5 }}</td>
+            <td>{{ rank.last10Form.W }} - {{ rank.last10Form.L }}</td>
+            <td>{{ rank.streak }}</td>
             <td>{{ rank.last | date: 'EEEE, MMMM d, y'}}</td>
             <td>-{{ rank.penalty }}</td>
           </tr>
