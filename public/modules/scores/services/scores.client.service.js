@@ -198,5 +198,3 @@ angular.module('scores')
       getTeamStats: getTeamStats
     };
   }]);
-
-console.log('foo');
